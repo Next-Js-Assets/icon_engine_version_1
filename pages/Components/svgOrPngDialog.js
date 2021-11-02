@@ -35,9 +35,6 @@ export default function SvgOrPngDialog({
     };
     SVGToPNG(data)
       .then((outputData) => {
-        //console.log(typeof outputData);
-        //console.log(outputData);
-        // setPNGFormat(outputData);
         downloadFile(outputData);
         addRecordInHistroy();
       })

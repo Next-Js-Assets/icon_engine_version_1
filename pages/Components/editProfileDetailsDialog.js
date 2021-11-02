@@ -5,14 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 export default function EditProfileDEtailsDialog({
   open = false,
   handleClose,
-  userDetails = {
-    firstName: "nigeeta",
-    lastName: "wadhwani",
-    country: "Pakistan",
-    email: "nigeetawadhwani@gmail.com",
-    website: "http://www.google.com",
-    password: "0011",
-  },
+  userDetails = {},
 }) {
   const [allCountries, setAllCounries] = useState([]);
   const [userFirstName, setUserFirstName] = useState("");
@@ -26,7 +19,7 @@ export default function EditProfileDEtailsDialog({
     setUserFirstName(userDetails.firstName);
     setUserLastName(userDetails.lastName);
     setUserPassword(userDetails.password);
-    setUserWebsite(userDetails.website);
+    setUserWebsite(userDetails.websiteLink);
     setUserEmail(userDetails.email);
     setAllCounries([
       "Algeria",
@@ -131,7 +124,7 @@ export default function EditProfileDEtailsDialog({
       "Belize",
       "United Kindom",
     ]);
-  }, []);
+  }, [userDetails]);
 
   const handleUserDetailsUpdateClick = (event) => {
     event.preventDefault();

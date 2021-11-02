@@ -4,7 +4,11 @@ import { ExclamationIcon, XIcon } from "@heroicons/react/outline";
 import SvgOrPngDialog from "./svgOrPngDialog";
 import SelectLanguageDialog from "./selectLanguageDialog";
 
-export default function ShowDesignModal({ open=false, handleClose, selectedDesign={} }) {
+export default function ShowDesignModal({
+  open = false,
+  handleClose,
+  selectedDesign = {},
+}) {
   //const [open, setOpen] = useState(true)
 
   // local states
@@ -13,13 +17,12 @@ export default function ShowDesignModal({ open=false, handleClose, selectedDesig
   // handlers
   const handleUseDesignClick = (event) => {
     event.preventDefault();
-    if (selectedDesign.languages > 1) {
+    if (selectedDesign.attachedLanguages.length > 1) {
       // ask to select language first
       setOpenSelectLanguageDialog(true);
     } else {
       // redirect to canva link
-      alert("redirect to canva link");
-      handleClose();
+      window.open(selectedDesign.designCanvaLink);
     }
   };
   const handleSelectLanguageDialogClose = () => {
@@ -72,7 +75,7 @@ export default function ShowDesignModal({ open=false, handleClose, selectedDesig
                 open={openSelectLanguageDialog}
                 handleClose={handleSelectLanguageDialogClose}
                 // languages={selectedDesign.languages}
-                languages={["hindhi", "english", "french","hindhi", "english", "french"]}
+                languages={selectedDesign.attachedLanguages}
               />
               <div className="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
@@ -91,12 +94,15 @@ export default function ShowDesignModal({ open=false, handleClose, selectedDesig
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    {selectedDesign.name}
+                    {selectedDesign.designTitle}
                   </Dialog.Title>
                   <div className="mt-2">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <img src={selectedDesign.imageUrl} />
+                        <img
+                          src={selectedDesign.designThumbnail}
+                          className="h-50 w-50 rounded-t  xl:w-96 xl:h-96"
+                        />
                       </div>
                       <div className="">
                         <div className="flex justify-between">
@@ -111,7 +117,8 @@ export default function ShowDesignModal({ open=false, handleClose, selectedDesig
                           }
                           </ul>)} */}
                           <ul className="list list-decimal list-outside ml-4">
-                            {" "}
+                            {selectedDesign.designDescription}
+                            {/* {" "}
                             <li className="mt-1">
                               Lorem Ipsum is simply dummy text of the printing
                               and typesetting industry.
@@ -123,7 +130,7 @@ export default function ShowDesignModal({ open=false, handleClose, selectedDesig
                             <li className="mt-1">
                               Lorem Ipsum is simply dummy text of the printing
                               and typesetting industry.
-                            </li>
+                            </li> */}
                           </ul>
                         </div>
                       </div>

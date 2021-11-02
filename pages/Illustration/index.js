@@ -20,6 +20,14 @@ function Index(props) {
   // local states
   const [popularIllustrations, setPopularIllustrations] = useState([]);
   const [newIllustrations, setNewIllustrations] = useState([]);
+  const [
+    fetchedNewestIllustrationFromAPI,
+    setfetchedNewestIllustrationFromAPI,
+  ] = useState([]);
+  const [
+    fetchedPopularIllustrationFromAPI,
+    setfetchedPopularIllustrationFromAPI,
+  ] = useState([]);
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
   const [targetColor, setTargetColor] = useState({
     currentValue: null,
@@ -27,31 +35,111 @@ function Index(props) {
     colorKey: null,
   });
 
- 
   useEffect(() => {
     const EST_WIDTH = "300";
     const EST_HEIGHT = "200";
     const EST_VIEWBOX = `viewBox="40 -10 400 300"`;
     const MOBILEORDESKTOP = 1; // 1 for desktop, 0 for mobile
 
-    let resizedData = svgData.map((svg, index) => {
-      return {
-        id: svg.id,
-        name: svg.name,
-        data: resizeSVG(
-          svg.data,
-          EST_WIDTH,
-          EST_HEIGHT,
-          EST_VIEWBOX,
-          MOBILEORDESKTOP
-        ),
-      };
-    });
-    setPopularIllustrations([...resizedData]); // used to render
-    setNewIllustrations([...resizedData]);
+    let resizedDataForNewestIllustration = fetchedNewestIllustrationFromAPI.map(
+      (illustration, index) => {
+        return {
+          id: illustration._id,
+          name: illustration.IllustrationTitle,
+          description: illustration.IllustrationDescription,
+          languages: illustration.attachedLanguages,
+          uploadDate: illustration.uploadDate,
+          downloadingHistory: illustration.downloadingHistory,
+          attachedCatagories: illustration.attachedCatagories,
+          attachedTags: illustration.attachedTags,
+          data: resizeSVG(
+            illustration.IllustrationThumbnail,
+            EST_WIDTH,
+            EST_HEIGHT,
+            EST_VIEWBOX,
+            MOBILEORDESKTOP
+          ),
+        };
+      }
+    );
+    let resizedDataForPopularIllustartion =
+      fetchedPopularIllustrationFromAPI.map((illustration, index) => {
+        return {
+          id: illustration._id,
+          name: illustration.IllustrationTitle,
+          description: illustration.IllustrationDescription,
+          languages: illustration.attachedLanguages,
+          uploadDate: illustration.uploadDate,
+          downloadingHistory: illustration.downloadingHistory,
+          attachedCatagories: illustration.attachedCatagories,
+          attachedTags: illustration.attachedTags,
+          data: resizeSVG(
+            illustration.IllustrationThumbnail,
+            EST_WIDTH,
+            EST_HEIGHT,
+            EST_VIEWBOX,
+            MOBILEORDESKTOP
+          ),
+        };
+      });
+    setNewIllustrations([...resizedDataForNewestIllustration]);
+    setPopularIllustrations([...resizedDataForPopularIllustartion]);
     setCurrentPrimaryColors(primaryColors);
-  }, []);
+  }, [fetchedNewestIllustrationFromAPI, fetchedPopularIllustrationFromAPI]);
 
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_newest_illustrations_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          console.log(data.responsePayload);
+          setfetchedNewestIllustrationFromAPI(data.responsePayload);
+        } else {
+          console.log(data.responseMessage);
+        }
+      });
+  }, []);
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_most_popular_illustrations_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          console.log(data.responsePayload);
+          setfetchedPopularIllustrationFromAPI(
+            data.responsePayload.map((item) => item.allFields)
+          );
+          // setfetchedPopularIllustrationFromAPI(data.responsePayload);
+        } else {
+          console.log(data.responseMessage);
+        }
+      });
+  }, []);
   // handlers
   const handleSeeMoreCategoriesClick = () => {
     alert("show more");

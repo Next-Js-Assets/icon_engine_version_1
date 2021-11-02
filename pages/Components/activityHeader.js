@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 // routing
 import Link from "next/link";
 import { Fragment } from "react";
 import EditProfileDEtailsDialog from "./editProfileDetailsDialog";
+import { useRouter } from "next/router";
 
 // navigation options
 const navigation = [
@@ -38,8 +39,10 @@ function classNames(...classes) {
 
 //Header Component
 const ActivityHeader = () => {
+  const router = useRouter();
   const [openEditProfileDetailsDialog, setOpenEditProfileDetailsDiaolg] =
     useState(false);
+  const [userDetails, setUserDetails] = useState({});
 
   const handleEditProfileDetailsDialogClose = (event) => {
     setOpenEditProfileDetailsDiaolg(false);
@@ -50,13 +53,17 @@ const ActivityHeader = () => {
   };
   const handleSignOutClick = (event) => {
     event.preventDefault();
-    alert("sign out");
+    localStorage.clear();
+    router.push("/");
   };
   const handleOpenActivityDrawer = (event) => {
     event.preventDefault();
     let drawerComponent = document.getElementById("activityDrawer");
     drawerComponent.classList.remove("hidden");
   };
+  useEffect(() => {
+    setUserDetails(JSON.parse(localStorage.getItem("userDetails")));
+  }, []);
   return (
     <header
       className="bg-gray-900 sticky top-0 border-b border-gray-600"
@@ -66,6 +73,7 @@ const ActivityHeader = () => {
       <EditProfileDEtailsDialog
         open={openEditProfileDetailsDialog}
         handleClose={handleEditProfileDetailsDialogClose}
+        userDetails={userDetails}
       />
       <nav className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="w-full py-6 flex items-center justify-between border-b border-indigo-500 lg:border-none">
@@ -111,11 +119,9 @@ const ActivityHeader = () => {
                 <div>
                   <Menu.Button className="bg-white rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      className="h-8 w-8 rounded-full"
-                      src={user.imageUrl}
-                      alt=""
-                    />
+                    <span className="h-8 w-8 rounded-full" alt="">
+                      N
+                    </span>
                   </Menu.Button>
                 </div>
                 <Transition

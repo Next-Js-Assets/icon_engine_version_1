@@ -225,43 +225,7 @@ const Index = () => {
               </div>
             </div>
           </div>
-          {/* Designs */}
-          <div className="space-y-12 mt-10 ">
-            <div className="sm:px-20 px-4 space-y-12 py-10 ">
-              <Title title={`Recent Download Designs`} />
-              <ul
-                role="list"
-                className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-              >
-                {Items.slice(0, 4).map((design, index) => (
-                  <li
-                    key={`design_${index}`}
-                    className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
-                  >
-                    <div className="">
-                      <h3 className=" mx-1 pt-2 text-xl inline-block">
-                        {design.downloadedBy.firstName}
-                      </h3>
-                      <span className="h-8 w-8 inline-block float-right pt-2 mx-2">
-                        {/* <Link href={illustraion.downloadedBy.websiteLink}> */}
-                        <img src="https://img.icons8.com/material-outlined/24/000000/forward-arrow.png" />{" "}
-                        {/* </Link> */}
-                      </span>
-                    </div>
-                    <h4 className="mx-2 float-left pb-2 block text-gray-500 text-lg">
-                      {design.downloadedBy.country}
-                    </h4>
-                    <DesignCard design={design} />
-                  </li>
-                ))}
-              </ul>
-              <div className="space-y-5 pb-4 sm:space-y-4  md:max-w-xl lg:max-w-3xl xl:max-w-none">
-                <span className="mx-2 cursor-pointer text-lg float-right ">
-                  see More{" "}
-                </span>
-              </div>
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>

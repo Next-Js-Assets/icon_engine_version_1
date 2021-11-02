@@ -1,14 +1,14 @@
 import { MongoClient } from "mongodb";
 import { db_credentials } from "../../../Values/api_credentials";
 async function handler(req, res) {
-  console.log("loading popualar  illustrations");
+  console.log("loading popualar  designs");
   if (req.method === "POST") {
     try {
       let records = [];
       const client = await MongoClient.connect(db_credentials);
       const db = client.db();
       const meta_data_collection = db
-        .collection("meta_data_illustrations")
+        .collection("meta_data_designs")
         .aggregate([
           {
             $project: {
@@ -32,7 +32,7 @@ async function handler(req, res) {
             responsePayload: records,
           });
         });
-    
+     
     } catch (err) {
       console.log(error);
       res.status(201).json({

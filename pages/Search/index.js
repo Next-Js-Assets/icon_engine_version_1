@@ -3,200 +3,22 @@ import { useEffect, useState } from "react";
 import SearchBar from "../Components/searchBar";
 import CustomDropDown from "../Components/CustomDropDown";
 import Title from "../Components/title";
-import ShowDesignModal from "../Components/showDesignModal";
 import IllustrationCard from "../Components/illustrationCard";
 import DesignCard from "../Components/designCard";
 import Layout from "../Components/layout";
 import BackgroundSwitch from "../Components/backgroundSwitch";
 import primaryColors from "../../SVGManagerAPI/PrimaryColors";
-import svgData from "../../SVGManagerAPI/svgData";
-import getSizeDetails from "../../SVGManagerAPI/SVGSizeModifierAPI";
 import { withRouter } from "next/router";
 import SearchEngine from "../../SVGManagerAPI/SearchEngine";
 import GetRefinedKeyword from "../Components/GetRefinedKeyword";
-import {SerachFilteredResults} from '../../SVGManagerAPI/SerachFilteredResults'
-const Items = [
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633264985178-d23fa9a59c96?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633289475421-f0f851f6f00e?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633313559082-5db0c86df12d?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627293007095-8b335ebae6e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113213095-5fda85346b43?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113089635-115b38c66c49?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwyMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627490654190-61d45cb41693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDF8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633277190581-d26618118553?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633295174543-b63811578a94?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633264985178-d23fa9a59c96?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633289475421-f0f851f6f00e?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633313559082-5db0c86df12d?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627293007095-8b335ebae6e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113213095-5fda85346b43?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113089635-115b38c66c49?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwyMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627490654190-61d45cb41693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDF8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633277190581-d26618118553?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633295174543-b63811578a94?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  // More Items...
-];
-
-const tags = [
-  "Bussiness",
-  "art",
-  "facebook",
-  "office work",
-  "bussiness workers",
-  "Bussiness",
-  "art",
-  "facebook",
-  "office work",
-  "bussiness workers",
-  "art",
-  "facebook",
-  "office work",
-  "bussiness workers",
-];
+import { SerachFilteredResults } from "../../SVGManagerAPI/SerachFilteredResults";
+import resizeSVG from "../../SVGManagerAPI/SVGSizeModifierAPI";
 
 function Index({ router }) {
-  const [openShowDesignModal, setOpenShowDesignModal] = useState(false);
-  const [selectedDesign, setSelectedDesign] = useState({});
   const [currentIllustrations, setCurrentIllustrations] = useState([]);
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
+  const [fetchedIllustrations, setFetchedIllustration] = useState([]);
+  const [fetchedDesigns, setFetchedDesigns] = useState([]);
   //---------------------------filters states-----------
   const [refinedKeywords, setRefinedKewords] = useState([]);
   const [fetchedResultsFromAPI, setFetchedResultsFromAPI] = useState([]);
@@ -206,34 +28,47 @@ function Index({ router }) {
   const [type, setType] = useState("all");
   const [language, setLanguage] = useState("English");
   const [searchInput, setSerachInput] = useState("");
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [categoryNames, setCategoryNames] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
+  const [tagsTitleList, setTagsTitleList] = useState([]);
   //---------------------------------used to fetch results once
   useEffect(() => {
-    const searchValue = router.query.searchValue.toLowerCase();
-    setType(router.query.type);
-    if (searchValue != "") setRefinedKewords(GetRefinedKeyword(searchValue));
+    //console.log(router.query.type);
+    if (router.query.searchValue != undefined) {
+      const searchValue = router.query.searchValue.toLowerCase();
+      if (searchValue != "") setRefinedKewords(GetRefinedKeyword(searchValue));
+    }
+    if (router.query.type != undefined) setType(router.query.type);
+
+    if (router.query.category != undefined)
+      setCatgoryName(router.query.category);
   }, []);
   useEffect(() => {
-    SearchEngine(type).then(
-      (data) => {
-          console.log("----------search results---------");
+    if (type != undefined) {
+      SearchEngine(type.toLowerCase()).then(
+        (data) => {
+          console.log("----------search results from serach page---------");
           console.log(data);
           setFetchedResultsFromAPI(data);
-      },
-      (error) => {
-        console.log(error.message);
-      }
-    );
+        },
+        (error) => {
+          //console.log(error.message);
+        }
+      );
+    }
   }, [type]);
+
   useEffect(() => {
     console.log("------when fiters changes---------");
-    console.log(
-      SerachFilteredResults(
-        refinedKeywords,
-        fetchedResultsFromAPI,
-        categoryName,
-        selectedTags
-      )
-    );
+    // console.log(
+    //   SerachFilteredResults(
+    //     refinedKeywords,
+    //     fetchedResultsFromAPI,
+    //     categoryName,
+    //     selectedTags
+    //   )
+    // );
   }, [sortType, language, type, categoryName, selectedTags]);
 
   useEffect(() => {
@@ -241,35 +76,155 @@ function Index({ router }) {
     const EST_HEIGHT = "200";
     const EST_VIEWBOX = `viewBox="45 -40 400 400"`;
     const MOBILEORDESKTOP = 1; // 1 for desktop, 0 for mobile
-    let resizedData = svgData.map((svg, index) => {
-      return {
-        id: svg.id,
-        name: svg.name,
-        data: getSizeDetails(
-          svg.data,
-          EST_WIDTH,
-          EST_HEIGHT,
-          EST_VIEWBOX,
-          MOBILEORDESKTOP
-        ),
-      };
-    });
-    setCurrentIllustrations([...resizedData]);
-    setCurrentPrimaryColors([...primaryColors]);
+    console.log("outside=================");
+
+    if (fetchedResultsFromAPI.illustrations != undefined) {
+      console.log("inside here====================================");
+      let resizedData = fetchedResultsFromAPI.illustrations.map(
+        (illustration, index) => {
+          return {
+            id: illustration._id,
+            name: illustration.IllustrationTitle,
+            description: illustration.IllustrationDescription,
+            languages: illustration.attachedLanguages,
+            uploadDate: illustration.uploadDate,
+            downloadingHistory: illustration.downloadingHistory,
+            attachedCatagories: illustration.attachedCatagories,
+            attachedTags: illustration.attachedTags,
+            data: resizeSVG(
+              illustration.IllustrationThumbnail,
+              EST_WIDTH,
+              EST_HEIGHT,
+              EST_VIEWBOX,
+              MOBILEORDESKTOP
+            ),
+          };
+        }
+      );
+      setCurrentIllustrations([...resizedData]);
+      setCurrentPrimaryColors([...primaryColors]);
+    }
+  }, [fetchedResultsFromAPI]);
+
+  // useEffect(() => {
+  //   fetch("/api/FrontEnd_api/load_newest_designs_api", {
+  //     method: "POST",
+  //     body: JSON.stringify({}),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then(
+  //       (resp) => {
+  //         return resp.json();
+  //       },
+  //       (error) => {
+  //         //console.log(error);
+  //       }
+  //     )
+  //     .then((data) => {
+  //       if (data.responseCode == 1) {
+  //         //console.log(data.responsePayload);
+  //         setFetchedDesigns(data.responsePayload);
+  //       } else {
+  //         //console.log(data.responseMessage);
+  //       }
+  //     });
+  // }, []);
+  // useEffect(() => {
+  //   fetch("/api/FrontEnd_api/load_newest_illustrations_api", {
+  //     method: "POST",
+  //     body: JSON.stringify({}),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then(
+  //       (resp) => {
+  //         return resp.json();
+  //       },
+  //       (error) => {
+  //         //console.log(error);
+  //       }
+  //     )
+  //     .then((data) => {
+  //       if (data.responseCode == 1) {
+  //         //console.log(data.responsePayload);
+  //         setFetchedIllustration(data.responsePayload);
+  //       } else {
+  //         //console.log(data.responseMessage);
+  //       }
+  //     });
+  // }, []);
+
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_all_categories_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          //console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          //console.log("---------");
+          //console.log(data.responsePayload);
+          setCategoriesList(data.responsePayload);
+        } else {
+          //console.log(data.responseMessage);
+        }
+      });
+
+    fetch("/api/FrontEnd_api/load_all_tags_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          //console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          //console.log("---------");
+          //console.log(data.responsePayload);
+          setTagsList(data.responsePayload);
+        } else {
+          //console.log(data.responseMessage);
+        }
+      });
   }, []);
+  useEffect(() => {
+    //console.log("in category names " + categoriesList.length);
+    if (categoriesList.length > 0) {
+      setCategoryNames(categoriesList.map((category) => category.title));
+    }
+    if (tagsList.length > 0) {
+      setTagsTitleList(tagsList.map((tag) => tag.title));
+    }
+  }, [categoriesList, tagsList]);
+
   //handlers
-  const handleShowDesignModalClose = () => {
-    setOpenShowDesignModal(false);
-  };
-  const handletagSelection = (tagValue) => {
+
+  const handletagSelection = (tagValue, tagId) => {
     setSelectedTags((prevTags) => [...prevTags, tagValue]);
-  };
-  const handleShowDesignModalOpen = () => {
-    setOpenShowDesignModal(true);
-  };
-  const handleStartUsingDesignClick = (design) => {
-    setSelectedDesign(design);
-    handleShowDesignModalOpen();
+    //console.log("-----------------selected tags-------------");
+    //console.log(selectedTags);
+    // document.getElementById(tagId).classList.remove("bg-white");
   };
 
   const handleSearchInputChange = (event) => {
@@ -294,12 +249,6 @@ function Index({ router }) {
   };
   return (
     <div className="mx-auto ">
-      {/*Show Design Details Modal*/}
-      <ShowDesignModal
-        open={openShowDesignModal}
-        handleClose={handleShowDesignModalClose}
-        selectedDesign={selectedDesign}
-      />
       <div className="mx-auto text-center  py-4  justify-items-center bg-gray-100">
         <input
           type="text"
@@ -345,7 +294,7 @@ function Index({ router }) {
             <div className="ml-8 mt-1">
               {" "}
               <CustomDropDown
-                options={["bussiness", "game", "social"]}
+                options={categoryNames}
                 name={categoryName}
                 handleChoice={handlCategoryChange}
               />
@@ -384,78 +333,77 @@ function Index({ router }) {
           <div className="mb-1 sm:py-4 py-1 rounded cursor-pointer bg-gray-100">
             <h1 className="text-lg  ml-8">Tags</h1>
             <div className="sm:mx-10 mb-10 ml-8 justify-items-center">
-              {tags.slice(0, 9).map((tag, index) => (
+              {tagsTitleList.map((tag, index) => (
                 <span
-                  key={index}
+                  key={`tag_no_${index}`}
                   className="mx-1 inline-block my-1 bg-white border-2 px-4 py-2 rounded-full cursor-pointer"
-                  onClick={() => handletagSelection(tag)}
+                  onClick={() => handletagSelection(tag, `tag_no_${index}`)}
                 >
                   {tag}
                 </span>
               ))}
-              <span
-                className="mx-1 inline-block my-1 bg-white border-2 px-4 py-2 rounded-full cursor-pointer"
-                onClick={() => alert("show more")}
-              >
-                {" "}
-                {`+${tags.length - 9}`}
-              </span>
             </div>
           </div>
         </div>
         <div className="sm:col-span-5">
           {/*Designs*/}
-          <div className="space-y-12 ">
-            <div className="sm:px-20 px-4  space-y-12 py-10 ">
-              <Title title={`Designs`} />
-              <ul
-                role="list"
-                className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-              >
-                {Items.slice(0, 4).map((design, index) => (
-                  <li
-                    key={`design_${index}`}
-                    className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
-                  >
-                    <DesignCard
-                      design={design}
-                      handleStartUsingDesignClick={handleStartUsingDesignClick}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <div className="bg-gray-100 py-2 text-center">
-                <span className="cursor-pointer">Load More</span>
+          {(type.toLowerCase() == "design" ||
+            type.toLowerCase() == "all") && (
+            <div className="space-y-12 ">
+              <div className="sm:px-20 px-4  space-y-12 py-10 ">
+                <Title title={`Designs`} />
+                <ul
+                  role="list"
+                  className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+                >
+                  {fetchedResultsFromAPI.designs != undefined &&
+                    fetchedResultsFromAPI.designs
+                      .slice(0, 12)
+                      .map((design, index) => (
+                        <li
+                          key={`design_${index}`}
+                          className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
+                        >
+                          <DesignCard design={design} />
+                        </li>
+                      ))}
+                </ul>
+                <div className="bg-gray-100 py-2 text-center">
+                  <span className="cursor-pointer">Load More</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/*Illustrations*/}
-          <div className="space-y-12 mt-10">
-            <div className="sm:px-20 px-4 space-y-12 py-10">
-              <Title title={`Illustration`} />
+          {(type.toLowerCase() == "all" ||
+            type.toLowerCase() == "illustration") && (
+            <div className="space-y-12 mt-10">
+              <div className="sm:px-20 px-4 space-y-12 py-10">
+                <Title title={`Illustration`} />
 
-              <ul
-                role="list"
-                className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
-              >
-                {currentIllustrations.map((illustraion, index) => (
-                  <li
-                    key={`illustraion_${index}`}
-                    className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
-                  >
-                    <IllustrationCard
-                      illustraion={illustraion}
-                      primaryColors={currentPrimaryColors}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <div className="bg-gray-100 py-2 text-center">
-                <span className="cursor-pointer">Load More</span>
+                <ul
+                  role="list"
+                  className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+                >
+                  {currentIllustrations.map((illustraion, index) => (
+                    <li
+                      key={`illustraion_${index}`}
+                      className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
+                    >
+                      <IllustrationCard
+                        illustraion={illustraion}
+                        primaryColors={currentPrimaryColors}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <div className="bg-gray-100 py-2 text-center">
+                  <span className="cursor-pointer">Load More</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

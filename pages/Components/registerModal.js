@@ -153,6 +153,7 @@ export default function Register({ open = false, handleClose }) {
         console.log(data);
         if (data.responseCode === 1) {
           alert("successfully inserted");
+          handleClose();
           // navigate to profile page with detials
         } else if (data.responseCode === 2) {
           alert("Try again");

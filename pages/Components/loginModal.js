@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/outline";
 // routing
@@ -54,8 +54,12 @@ export default function Login({ open = false, handleClose }) {
           } else {
             alert(data.responseMessage);
             console.log(data.responsePayload);
-            localStorage.setItem("userEmail",data.responsePayload.email);
-            router.push({ pathname: "/profile"});
+            localStorage.setItem(
+              "userDetails",
+              JSON.stringify(data.responsePayload)
+            );
+            localStorage.setItem("isLogin", true);
+            router.push({ pathname: "/profile" });
           }
         } else if (data.responseCode == 2) {
           // user not found

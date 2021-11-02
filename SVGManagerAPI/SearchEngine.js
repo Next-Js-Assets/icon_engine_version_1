@@ -1,17 +1,45 @@
+import { FeedLabel } from "semantic-ui-react";
 import { FetchAllIllustrations, FetchAllDesigns } from "./helperFunctions";
 
 const SearchEngine = async (type = "all") => {
-  let matchedResults = [];
-
+  let matchedResults = {};
+  // console.log("in serach engine " + type);
   if (type == "all") {
+    return FetchAllIllustrations().then(
+      (resolve) => {
+        matchedResults.illustrations = resolve;
+        return FetchAllDesigns().then(
+          (resolve) => {
+            matchedResults.designs = resolve;
+            return matchedResults;
+          },
+          (reject) => console.log("reject")
+        );
+      },
+      (reject) => console.log("reject")
+    );
   } else if (type == "illustration") {
-    matchedResults = await FetchAllIllustrations();
+    // matchedResults.illustartions = FetchAllIllustrations();
+    return FetchAllIllustrations().then(
+      (resolve) => {
+        console.log("resolve");
+        console.log(resolve);
+        matchedResults.illustrations = resolve;
+        return matchedResults;
+      },
+      (reject) => console.log("reject")
+    );
   } else if (type == "design") {
-    matchedResults = await FetchAllDesigns();
+    return FetchAllDesigns().then(
+      (resolve) => {
+        console.log("resolve");
+        console.log(resolve);
+        matchedResults.designs = resolve;
+        return matchedResults;
+      },
+      (reject) => console.log("reject")
+    );
   }
-  console.log("-------matched Results-------");
-  console.log(matchedResults);
-  return matchedResults;
 };
 
 export default SearchEngine;

@@ -16,91 +16,6 @@ import svgData from "../SVGManagerAPI/svgData";
 import resizeSVG from "../SVGManagerAPI/SVGSizeModifierAPI";
 import primaryColors from "../SVGManagerAPI/PrimaryColors";
 import SearchEngine from "../SVGManagerAPI/SearchEngine";
-import { serialize } from "bson";
-
-const Items = [
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633264985178-d23fa9a59c96?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    languages: 3,
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633289475421-f0f851f6f00e?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    languages: 2,
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633313559082-5db0c86df12d?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627293007095-8b335ebae6e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113213095-5fda85346b43?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113089635-115b38c66c49?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwyMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627490654190-61d45cb41693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDF8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633277190581-d26618118553?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633295174543-b63811578a94?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  // More Items...
-];
 
 function Index(props) {
   const router = useRouter();
@@ -124,6 +39,31 @@ function Index(props) {
         if (data.responseCode == 1) {
           console.log(data.responsePayload);
           setfetchedNewestIllustrationFromAPI(data.responsePayload);
+        } else {
+          console.log(data.responseMessage);
+        }
+      });
+  }, []);
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_newest_designs_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          console.log(data.responsePayload);
+          setfetchedNewestDesignsFromAPI(data.responsePayload);
         } else {
           console.log(data.responseMessage);
         }
@@ -157,6 +97,60 @@ function Index(props) {
         }
       });
   }, []);
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_most_popular_designs_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          console.log(data.responsePayload);
+          setfetchedPopularDesignsFromAPI(
+            data.responsePayload.map((item) => item.allFields)
+          );
+          // setfetchedPopularIllustrationFromAPI(data.responsePayload);
+        } else {
+          console.log(data.responseMessage);
+        }
+      });
+  }, []);
+  useEffect(() => {
+    fetch("/api/FrontEnd_api/load_all_categories_api", {
+      method: "POST",
+      body: JSON.stringify({}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(
+        (resp) => {
+          return resp.json();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      .then((data) => {
+        if (data.responseCode == 1) {
+          console.log("---------");
+          console.log(data.responsePayload);
+          setFetchedCategoriesFromAPI(data.responsePayload);
+        } else {
+          console.log(data.responseMessage);
+        }
+      });
+  }, []);
   // let iteraotor;
 
   // const [fetchedCategories, setFetchedCategories] = useState([]);
@@ -182,10 +176,16 @@ function Index(props) {
     fetchedNewestIllustrationFromAPI,
     setfetchedNewestIllustrationFromAPI,
   ] = useState([]);
+  const [fetchedNewestDesignsFromAPI, setfetchedNewestDesignsFromAPI] =
+    useState([]);
   const [
     fetchedPopularIllustrationFromAPI,
     setfetchedPopularIllustrationFromAPI,
   ] = useState([]);
+  const [fetchedPopularDesignsFromAPI, setfetchedPopularDesignsFromAPI] =
+    useState([]);
+  const [fetchedCategoriesFromAPI, setFetchedCategoriesFromAPI] = useState([]);
+
   useEffect(() => {
     const EST_WIDTH = "300";
     const EST_HEIGHT = "200";
@@ -238,24 +238,13 @@ function Index(props) {
     setCurrentPrimaryColors(primaryColors);
   }, [fetchedNewestIllustrationFromAPI, fetchedPopularIllustrationFromAPI]);
   // local states
-  const [openShowDesignModal, setOpenShowDesignModal] = useState(false);
-  const [selectedDesign, setSelectedDesign] = useState({});
+
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
 
   // handlers
   const handleSeeMoreCategoriesClick = () => {
     alert("show more");
     // setFetchedCategories((prev) => [...prev, ...iteraotor.next().value]);
-  };
-  const handleShowDesignModalClose = () => {
-    setOpenShowDesignModal(false);
-  };
-  const handleShowDesignModalOpen = () => {
-    setOpenShowDesignModal(true);
-  };
-  const handleStartUsingDesignClick = (design) => {
-    setSelectedDesign(design);
-    handleShowDesignModalOpen();
   };
 
   const handleGetSerachText = (searchValue, type) => {
@@ -278,7 +267,7 @@ function Index(props) {
             role="list"
             className="space-y-4 grid grid-cols-2 gap-2 bg-gray-900 sm:space-y-0  lg:grid-cols-5 lg:gap-8"
           >
-            {Items.map((category, index) => (
+            {fetchedCategoriesFromAPI.map((category, index) => (
               <li
                 key={`category_${index}`}
                 className="py-10 px-4 border cursor-pointer bg-white text-center rounded-lg xl:px-4 xl:text-left"
@@ -287,14 +276,7 @@ function Index(props) {
               </li>
             ))}
           </ul>
-          <div className="space-y-5 pb-4 sm:space-y-4  md:max-w-xl lg:max-w-3xl xl:max-w-none">
-            <span
-              className="mx-2 cursor-pointer text-lg float-right text-white"
-              onClick={handleSeeMoreCategoriesClick}
-            >
-              see More{" "}
-            </span>
-          </div>
+          <div className="space-y-5 pb-4 sm:space-y-4  md:max-w-xl lg:max-w-3xl xl:max-w-none"></div>
         </div>
       </div>
 
@@ -343,12 +325,6 @@ function Index(props) {
         </div>
       </div>
 
-      {/*Show Design Details Modal*/}
-      <ShowDesignModal
-        open={openShowDesignModal}
-        handleClose={handleShowDesignModalClose}
-        selectedDesign={selectedDesign}
-      />
       {/* Designs */}
       <div className="space-y-12 mt-20 ">
         <div className="sm:px-20 sm:mx-20 mx-4 space-y-12 py-10 ">
@@ -357,15 +333,12 @@ function Index(props) {
             role="list"
             className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
           >
-            {Items.map((design, index) => (
+            {fetchedNewestDesignsFromAPI.map((design, index) => (
               <li
                 key={`design_${index}`}
                 className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
               >
-                <DesignCard
-                  design={design}
-                  handleStartUsingDesignClick={handleStartUsingDesignClick}
-                />
+                <DesignCard design={design} />
               </li>
             ))}
           </ul>
@@ -379,15 +352,12 @@ function Index(props) {
             role="list"
             className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
           >
-            {Items.map((design, index) => (
+            {fetchedPopularDesignsFromAPI.map((design, index) => (
               <li
                 key={`design_${index}`}
                 className="pb-8 cursor-pointer bg-white  text-center rounded-lg xl:text-left"
               >
-                <DesignCard
-                  design={design}
-                  handleStartUsingDesignClick={handleStartUsingDesignClick}
-                />
+                <DesignCard design={design} />
               </li>
             ))}
           </ul>

@@ -18,53 +18,48 @@ const hexToRgb = (hex) => {
 export default hexToRgb;
 
 export const FetchAllIllustrations = async () => {
-  // let fetchedIllustration=[]
-  // fetch("/api/UserSide_api/load_illustrations_api", {
-  //   method: "GET",
-  //   body: JSON.stringify({}),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // })
-  //   .then(
-  //     (resp) => {
-  //       return resp.json();
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   )
-  //   .then((data) => {
-  //     console.log(data);
-  //     if (data.responseCode === 1) {
-  //       fetchedIllustration = data.responsePayload
-  //     }
-  //   });
-  return listOfIllustrations;
+  return fetch("/api/FrontEnd_api/load_all_illustrations_api", {
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then(
+      (resp) => {
+        return resp.json();
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+    .then((data) => {
+      //console.log(data);
+      if (data.responseCode === 1) {
+        return data.responsePayload;
+      }
+    });
 };
 
-export const FetchAllDesigns = async () => {
-  // let fetchedDesigns = [];
-  // fetch("/api/UserSide_api/load_designs_api", {
-  //   method: "GET",
-  //   body: JSON.stringify({}),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // })
-  //   .then(
-  //     (resp) => {
-  //       return resp.json();
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   )
-  //   .then((data) => {
-  //     console.log(data);
-  //     if (data.responseCode === 1) {
-  //       fetchedDesigns = data.responsePayload;
-  //     }
-  //   });
-  return listOfDesigns;
+export const FetchAllDesigns = () => {
+  return fetch("/api/FrontEnd_api/load_all_designs_api", {
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then(
+      (resp) => {
+        return resp.json();
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+    .then((data) => {
+      if (data.responseCode === 1) {
+        return data.responsePayload;
+      }
+    });
 };
