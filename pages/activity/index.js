@@ -174,6 +174,7 @@ const Index = () => {
           EST_VIEWBOX,
           MOBILEORDESKTOP
         ),
+        originalIllustration:illustration.originalIllustration
       };
     });
     setRecentDownloadIllustration([...resizedData]);

@@ -4,22 +4,21 @@ import Title from "../Components/title";
 import Layout from "../Components/layout";
 // routing
 import Link from "next/link";
-import SearchBar from "../Components/searchBar";
 import ColorPickerContainer from "../Components/colorPickerContainer";
 import primaryColors from "../../SVGManagerAPI/PrimaryColors";
-import DownloadIllustrationModal from "../Components/downloadIllustrationModal";
-import CategoryCard from "../Components/categoryCard";
 import IllustrationCard from "../Components/illustrationCard";
 import BackgroundSwitch from "../Components/backgroundSwitch";
-import svgData from "../../SVGManagerAPI/svgData";
-import { useMediaQuery } from "@mui/material";
 import produce from "immer";
 import resizeSVG from "../../SVGManagerAPI/SVGSizeModifierAPI";
+import filterIllustrations from "../../SVGManagerAPI/FilterIllustrations";
 
 function Index(props) {
   // local states
   const [popularIllustrations, setPopularIllustrations] = useState([]);
   const [newIllustrations, setNewIllustrations] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [fetchedSerachResults, setFetchedSerachResults] = useState([]);
+
   const [
     fetchedNewestIllustrationFromAPI,
     setfetchedNewestIllustrationFromAPI,
@@ -29,12 +28,14 @@ function Index(props) {
     setfetchedPopularIllustrationFromAPI,
   ] = useState([]);
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
+  const [serachMessage, setSearchMessage] = useState("");
   const [targetColor, setTargetColor] = useState({
     currentValue: null,
     prevValue: null,
     colorKey: null,
   });
 
+  // use Effects
   useEffect(() => {
     const EST_WIDTH = "300";
     const EST_HEIGHT = "200";
@@ -59,6 +60,7 @@ function Index(props) {
             EST_VIEWBOX,
             MOBILEORDESKTOP
           ),
+          originalIllustration: illustration.originalIllustration,
         };
       }
     );
@@ -80,6 +82,7 @@ function Index(props) {
             EST_VIEWBOX,
             MOBILEORDESKTOP
           ),
+          originalIllustration: illustration.originalIllustration,
         };
       });
     setNewIllustrations([...resizedDataForNewestIllustration]);
@@ -105,7 +108,7 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log(data.responsePayload);
+          //  console.log(data.responsePayload);
           setfetchedNewestIllustrationFromAPI(data.responsePayload);
         } else {
           console.log(data.responseMessage);
@@ -130,7 +133,7 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log(data.responsePayload);
+          //  console.log(data.responsePayload);
           setfetchedPopularIllustrationFromAPI(
             data.responsePayload.map((item) => item.allFields)
           );
@@ -140,23 +143,15 @@ function Index(props) {
         }
       });
   }, []);
+
   // handlers
   const handleSeeMoreCategoriesClick = () => {
     alert("show more");
     // setFetchedCategories((prev) => [...prev, ...iteraotor.next().value]);
   };
-  const handleOpenIllustrationModal = (
-    svgToDisplay,
-    name,
-    primaryColorsPosition
-  ) => {
-    // console.log(Item);
-    setSelectedIllustration({ svgToDisplay, name, primaryColorsPosition });
-    setOpenIllustrationModal(true);
-  };
 
   const handleColorChange = (e) => {
-    console.log("in handle color change");
+    //console.log("in handle color change");
 
     let newPrimaryColors = currentPrimaryColors.map((color) => {
       if (color.colorKey == e.target.id) {
@@ -174,6 +169,27 @@ function Index(props) {
     setCurrentPrimaryColors(newPrimaryColors);
   };
 
+  const handleSerachValueChange = (event) => {
+    setSearchValue(event.target.value.toLowerCase());
+  };
+  const handleSerachButtonClick = (event) => {
+    event.preventDefault();
+    if (searchValue != "") {
+      // setRefinedKewords(GetRefinedKeyword(searchValue));
+      // console.log(GetRefinedKeyword(searchValue));
+      filterIllustrations(searchValue).then(
+        (resolve) => {
+          console.log("======from illustration page-------------------");
+          console.log(resolve);
+          setFetchedSerachResults(resolve);
+          if (resolve.length == 0) setSearchMessage("no results found");
+        },
+        (reject) => {
+          console.log(reject);
+        }
+      );
+    }
+  };
   return (
     <div className="mx-auto  lg:py-10">
       <div className="sm:px-20 px-4 ">
@@ -189,6 +205,8 @@ function Index(props) {
       text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none 
       focus:ring-1 focus:ring-gray-500 focus:border-gray-500`}
           placeholder="Search..."
+          value={searchValue}
+          onChange={handleSerachValueChange}
         />
         <button
           type="submit"
@@ -197,9 +215,13 @@ function Index(props) {
        bg-gray-900 text-white
        border-gray-300 bg-white text-sm font-medium 
       `}
+          onClick={handleSerachButtonClick}
         >
           Search
         </button>
+        {fetchedSerachResults.length == 0 && (
+          <span className="text-gray-500 ml-5"> {serachMessage}</span>
+        )}
         <div className="ml-0 sm:ml-3 block sm:inline mt-5  sm:mt-0">
           <ColorPickerContainer
             handleColorChange={handleColorChange}
@@ -214,52 +236,80 @@ function Index(props) {
         </div> */}
       </div>
 
+      {/*serached results for illutration  */}
+      {fetchedSerachResults.length > 0 && (
+        <div className="space-y-12 mt-20">
+          <div className="sm:px-20 px-4  space-y-12 py-10">
+            <Title title={`Illustration`} />
+            <ul
+              role="list"
+              className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+            >
+              {fetchedSerachResults.map((illustraion, index) => (
+                <li
+                  key={`illustraion_${index}`}
+                  className="pb-6  border  text-center rounded-lg  text-center"
+                >
+                  <IllustrationCard
+                    illustraion={illustraion}
+                    targetColor={targetColor}
+                    primaryColors={currentPrimaryColors}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
       {/*illutration */}
-      <div className="space-y-12 mt-20">
-        <div className="sm:px-20 px-4  space-y-12 py-10">
-          <Title title={`New Illustration`} />
-          <ul
-            role="list"
-            className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
-          >
-            {newIllustrations.map((illustraion, index) => (
-              <li
-                key={`illustraion_${index}`}
-                className="pb-6  border  text-center rounded-lg  text-center"
-              >
-                <IllustrationCard
-                  illustraion={illustraion}
-                  targetColor={targetColor}
-                  primaryColors={currentPrimaryColors}
-                />
-              </li>
-            ))}
-          </ul>
+      {fetchedSerachResults.length == 0 && (
+        <div className="space-y-12 mt-20">
+          <div className="sm:px-20 px-4  space-y-12 py-10">
+            <Title title={`New Illustration`} />
+            <ul
+              role="list"
+              className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+            >
+              {newIllustrations.map((illustraion, index) => (
+                <li
+                  key={`illustraion_${index}`}
+                  className="pb-6  border  text-center rounded-lg  text-center"
+                >
+                  <IllustrationCard
+                    illustraion={illustraion}
+                    targetColor={targetColor}
+                    primaryColors={currentPrimaryColors}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-
-      <div className="space-y-15 mt-20 bg-gray-100">
-        <div className="sm:px-20 px-4  space-y-12 py-10">
-          <Title title={`Most Popular Illustration`} />
-          <ul
-            role="list"
-            className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
-          >
-            {popularIllustrations.map((illustraion, index) => (
-              <li
-                key={`illustraion_${index}`}
-                className="pb-6  bg-white cursor-pointer  text-center rounded-lg  text-center"
-              >
-                <IllustrationCard
-                  illustraion={illustraion}
-                  targetColor={targetColor}
-                  primaryColors={currentPrimaryColors}
-                />
-              </li>
-            ))}
-          </ul>
+      )}
+      {fetchedSerachResults.length == 0 && (
+        <div className="space-y-15 mt-20 bg-gray-100">
+          <div className="sm:px-20 px-4  space-y-12 py-10">
+            <Title title={`Most Popular Illustration`} />
+            <ul
+              role="list"
+              className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+            >
+              {popularIllustrations.map((illustraion, index) => (
+                <li
+                  key={`illustraion_${index}`}
+                  className="pb-6  bg-white cursor-pointer  text-center rounded-lg  text-center"
+                >
+                  <IllustrationCard
+                    illustraion={illustraion}
+                    targetColor={targetColor}
+                    primaryColors={currentPrimaryColors}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

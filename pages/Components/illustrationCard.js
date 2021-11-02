@@ -28,17 +28,20 @@ const IllustrationCard = ({
   }, [illustraion]);
   useEffect(() => {
     if (selectedThumbnail != null) {
+      console.log("in thumbnail setting")
       setSvgToDisplay(selectedThumbnail.data);
-      setOriginal(selectedThumbnail.data);
+      setOriginal(selectedThumbnail.originalIllustration);
     }
   }, [selectedThumbnail]);
 
   useEffect(() => {
     if (originalSVG != null)
       // It will run once.
+   {   console.log("osvg-------------------");
+      console.log(originalSVG)
       setPrimaryColorsPosition(
         findPrimaryColorPosition(originalSVG, primaryColors)
-      );
+      );}
     // console.log("**********************************************");
     // console.log(primaryColorsPosition);
   }, [originalSVG]);

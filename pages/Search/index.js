@@ -10,7 +10,7 @@ import BackgroundSwitch from "../Components/backgroundSwitch";
 import primaryColors from "../../SVGManagerAPI/PrimaryColors";
 import { withRouter } from "next/router";
 import SearchEngine from "../../SVGManagerAPI/SearchEngine";
-import GetRefinedKeyword from "../Components/GetRefinedKeyword";
+import GetRefinedKeyword from "../../SVGManagerAPI/GetRefinedKeyword";
 import { SerachFilteredResults } from "../../SVGManagerAPI/SerachFilteredResults";
 import resizeSVG from "../../SVGManagerAPI/SVGSizeModifierAPI";
 
@@ -34,7 +34,6 @@ function Index({ router }) {
   const [tagsTitleList, setTagsTitleList] = useState([]);
   //---------------------------------used to fetch results once
   useEffect(() => {
-    //console.log(router.query.type);
     if (router.query.searchValue != undefined) {
       const searchValue = router.query.searchValue.toLowerCase();
       if (searchValue != "") setRefinedKewords(GetRefinedKeyword(searchValue));
@@ -45,8 +44,8 @@ function Index({ router }) {
       setCatgoryName(router.query.category);
   }, []);
   useEffect(() => {
-    if (type != undefined) {
-      SearchEngine(type.toLowerCase()).then(
+    if (router.query.type != undefined) {
+      SearchEngine(router.query.type.toLowerCase()).then(
         (data) => {
           console.log("----------search results from serach page---------");
           console.log(data);
@@ -98,6 +97,7 @@ function Index({ router }) {
               EST_VIEWBOX,
               MOBILEORDESKTOP
             ),
+            originalIllustration: illustration.originalIllustration,
           };
         }
       );
@@ -347,63 +347,65 @@ function Index({ router }) {
         </div>
         <div className="sm:col-span-5">
           {/*Designs*/}
-          {(type.toLowerCase() == "design" ||
-            type.toLowerCase() == "all") && (
-            <div className="space-y-12 ">
-              <div className="sm:px-20 px-4  space-y-12 py-10 ">
-                <Title title={`Designs`} />
-                <ul
-                  role="list"
-                  className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-                >
-                  {fetchedResultsFromAPI.designs != undefined &&
-                    fetchedResultsFromAPI.designs
-                      .slice(0, 12)
-                      .map((design, index) => (
-                        <li
-                          key={`design_${index}`}
-                          className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
-                        >
-                          <DesignCard design={design} />
-                        </li>
-                      ))}
-                </ul>
-                <div className="bg-gray-100 py-2 text-center">
-                  <span className="cursor-pointer">Load More</span>
+          {router.query.type != undefined &&
+            (router.query.type.toLowerCase() == "design" ||
+              router.query.type.toLowerCase() == "all") && (
+              <div className="space-y-12 ">
+                <div className="sm:px-20 px-4  space-y-12 py-10 ">
+                  <Title title={`Designs`} />
+                  <ul
+                    role="list"
+                    className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+                  >
+                    {fetchedResultsFromAPI.designs != undefined &&
+                      fetchedResultsFromAPI.designs
+                        .slice(0, 12)
+                        .map((design, index) => (
+                          <li
+                            key={`design_${index}`}
+                            className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
+                          >
+                            <DesignCard design={design} />
+                          </li>
+                        ))}
+                  </ul>
+                  <div className="bg-gray-100 py-2 text-center">
+                    <span className="cursor-pointer">Load More</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/*Illustrations*/}
-          {(type.toLowerCase() == "all" ||
-            type.toLowerCase() == "illustration") && (
-            <div className="space-y-12 mt-10">
-              <div className="sm:px-20 px-4 space-y-12 py-10">
-                <Title title={`Illustration`} />
+          {router.query.type != undefined &&
+            (router.query.type.toLowerCase() == "all" ||
+              router.query.type.toLowerCase() == "illustration") && (
+              <div className="space-y-12 mt-10">
+                <div className="sm:px-20 px-4 space-y-12 py-10">
+                  <Title title={`Illustration`} />
 
-                <ul
-                  role="list"
-                  className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
-                >
-                  {currentIllustrations.map((illustraion, index) => (
-                    <li
-                      key={`illustraion_${index}`}
-                      className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
-                    >
-                      <IllustrationCard
-                        illustraion={illustraion}
-                        primaryColors={currentPrimaryColors}
-                      />
-                    </li>
-                  ))}
-                </ul>
-                <div className="bg-gray-100 py-2 text-center">
-                  <span className="cursor-pointer">Load More</span>
+                  <ul
+                    role="list"
+                    className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+                  >
+                    {currentIllustrations.map((illustraion, index) => (
+                      <li
+                        key={`illustraion_${index}`}
+                        className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
+                      >
+                        <IllustrationCard
+                          illustraion={illustraion}
+                          primaryColors={currentPrimaryColors}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="bg-gray-100 py-2 text-center">
+                    <span className="cursor-pointer">Load More</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </div>

@@ -5,12 +5,17 @@ import Layout from "../Components/layout";
 // routing
 import Link from "next/link";
 import DesignCard from "../Components/designCard";
+import filterDesigns from "../../SVGManagerAPI/FilterDesigns";
 
 function Index(props) {
   const [fetchedNewestDesignsFromAPI, setfetchedNewestDesignsFromAPI] =
     useState([]);
   const [fetchedPopularDesignsFromAPI, setfetchedPopularDesignsFromAPI] =
     useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [fetchedSerachResults, setFetchedSerachResults] = useState([]);
+  const [serachMessage, setSearchMessage] = useState("");
+
   useEffect(() => {
     fetch("/api/FrontEnd_api/load_newest_designs_api", {
       method: "POST",
@@ -70,6 +75,25 @@ function Index(props) {
     // setFetchedCategories((prev) => [...prev, ...iteraotor.next().value]);
   };
 
+  const handleSerachValueChange = (event) => {
+    setSearchValue(event.target.value.toLowerCase());
+  };
+  const handleSerachButtonClick = (event) => {
+    event.preventDefault();
+    if (searchValue != "") {
+      filterDesigns(searchValue).then(
+        (resolve) => {
+          console.log("======from Designs page-------------------");
+          console.log(resolve);
+          setFetchedSerachResults(resolve);
+          if (resolve.length == 0) setSearchMessage("no results found");
+        },
+        (reject) => {
+          console.log(reject);
+        }
+      );
+    }
+  };
   // return component
   return (
     <div className="mx-auto  lg:py-10">
@@ -86,6 +110,8 @@ function Index(props) {
       text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none 
       focus:ring-1 focus:ring-gray-500 focus:border-gray-500`}
           placeholder="Search..."
+          value={searchValue}
+          onChange={handleSerachValueChange}
         />
         <button
           type="submit"
@@ -94,49 +120,78 @@ function Index(props) {
        bg-gray-900 text-white
        border-gray-300 bg-white text-sm font-medium 
       `}
+          onClick={handleSerachButtonClick}
         >
           Search
         </button>
+
+        {fetchedSerachResults.length == 0 && (
+          <span className="text-gray-500 ml-5"> {serachMessage}</span>
+        )}
       </div>
 
+      {fetchedSerachResults.length > 0 && (
+        <div className="space-y-12 mt-20 ">
+          <div className="sm:px-20 sm:mx-20 mx-4  space-y-12 py-10 ">
+            <Title title={`Designs`} />
+            <ul
+              role="list"
+              className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+            >
+              {fetchedSerachResults.map((design, index) => (
+                <li
+                  key={`design_${index}`}
+                  className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
+                >
+                  <DesignCard design={design} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
       {/* Designs */}
-      <div className="space-y-12 mt-20 ">
-        <div className="sm:px-20 sm:mx-20 mx-4  space-y-12 py-10 ">
-          <Title title={`New Designs`} />
-          <ul
-            role="list"
-            className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-          >
-            {fetchedNewestDesignsFromAPI.map((design, index) => (
-              <li
-                key={`design_${index}`}
-                className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
-              >
-                <DesignCard design={design} />
-              </li>
-            ))}
-          </ul>
+      {fetchedSerachResults.length == 0 && (
+        <div className="space-y-12 mt-20 ">
+          <div className="sm:px-20 sm:mx-20 mx-4  space-y-12 py-10 ">
+            <Title title={`New Designs`} />
+            <ul
+              role="list"
+              className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+            >
+              {fetchedNewestDesignsFromAPI.map((design, index) => (
+                <li
+                  key={`design_${index}`}
+                  className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
+                >
+                  <DesignCard design={design} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="space-y-12 mt-20 bg-gray-100 pb-10">
-        <div className="sm:px-20 sm:mx-20 mx-4  space-y-12 py-10 ">
-          <Title title={`Most Popular Designs`} />
-          <ul
-            role="list"
-            className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-          >
-            {fetchedPopularDesignsFromAPI.map((design, index) => (
-              <li
-                key={`design_${index}`}
-                className="pb-8 cursor-pointer bg-white  text-center rounded-lg xl:text-left"
-              >
-                <DesignCard design={design} />
-              </li>
-            ))}
-          </ul>
+      {fetchedSerachResults.length == 0 && (
+        <div className="space-y-12 mt-20 bg-gray-100 pb-10">
+          <div className="sm:px-20 sm:mx-20 mx-4  space-y-12 py-10 ">
+            <Title title={`Most Popular Designs`} />
+            <ul
+              role="list"
+              className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+            >
+              {fetchedPopularDesignsFromAPI.map((design, index) => (
+                <li
+                  key={`design_${index}`}
+                  className="pb-8 cursor-pointer bg-white  text-center rounded-lg xl:text-left"
+                >
+                  <DesignCard design={design} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

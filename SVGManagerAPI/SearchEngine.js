@@ -22,8 +22,8 @@ const SearchEngine = async (type = "all") => {
     // matchedResults.illustartions = FetchAllIllustrations();
     return FetchAllIllustrations().then(
       (resolve) => {
-        console.log("resolve");
-        console.log(resolve);
+        // console.log("resolve");
+        // console.log(resolve);
         matchedResults.illustrations = resolve;
         return matchedResults;
       },
@@ -32,8 +32,8 @@ const SearchEngine = async (type = "all") => {
   } else if (type == "design") {
     return FetchAllDesigns().then(
       (resolve) => {
-        console.log("resolve");
-        console.log(resolve);
+        // console.log("resolve");
+        // console.log(resolve);
         matchedResults.designs = resolve;
         return matchedResults;
       },

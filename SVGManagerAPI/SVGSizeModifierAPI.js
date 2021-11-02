@@ -28,7 +28,7 @@ const resizeSVG = (
     EST_VIEWBOX
 
   );
-
+   
   return newIcon;
 };
 

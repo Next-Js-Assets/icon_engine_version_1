@@ -12,7 +12,6 @@ import DownloadIllustrationModal from "./Components/downloadIllustrationModal";
 import IllustrationCard from "./Components/illustrationCard";
 import DesignCard from "./Components/designCard";
 import CategoryCard from "./Components/categoryCard";
-import svgData from "../SVGManagerAPI/svgData";
 import resizeSVG from "../SVGManagerAPI/SVGSizeModifierAPI";
 import primaryColors from "../SVGManagerAPI/PrimaryColors";
 import SearchEngine from "../SVGManagerAPI/SearchEngine";
@@ -194,6 +193,7 @@ function Index(props) {
 
     let resizedDataForNewestIllustration = fetchedNewestIllustrationFromAPI.map(
       (illustration, index) => {
+        console.log(illustration.originalIllustration)
         return {
           id: illustration._id,
           name: illustration.IllustrationTitle,
@@ -210,6 +210,8 @@ function Index(props) {
             EST_VIEWBOX,
             MOBILEORDESKTOP
           ),
+          originalIllustration:illustration.originalIllustration
+          
         };
       }
     );
@@ -231,6 +233,8 @@ function Index(props) {
             EST_VIEWBOX,
             MOBILEORDESKTOP
           ),
+          originalIllustration:illustration.originalIllustration
+          
         };
       });
     setNewIllustrations([...resizedDataForNewestIllustration]);
