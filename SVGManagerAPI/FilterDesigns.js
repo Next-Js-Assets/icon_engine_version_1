@@ -31,7 +31,7 @@ const filterDesigns = async (keyword) => {
   );
 };
 
-const getFilteredDesignFromKeyword = (resolve, allMatchedDesigns, keyword) => {
+export const getFilteredDesignFromKeyword = (resolve, allMatchedDesigns, keyword) => {
   resolve.forEach((design) => {
     let isDesignAdded = false;
     if (design.designTitle.toLowerCase() == keyword) {

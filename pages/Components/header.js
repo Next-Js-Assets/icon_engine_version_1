@@ -29,7 +29,6 @@ const Header = () => {
   // local states
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
-  const [openTermsAndServices, setOpenTermsAndServices] = useState(false);
 
   // handlers
   const handleLoginModalClose = () => {
@@ -43,11 +42,8 @@ const Header = () => {
   };
   const handleRegisterModalClose = () => {
     setOpenRegisterModal(false);
-    setOpenTermsAndServices(true);
   };
-  const handleTermsAndServicesModalClose = () => {
-    setOpenTermsAndServices(false);
-  };
+
   const handleOpenDrawer = () => {
     let drawerComponent = document.getElementById("drawer");
     drawerComponent.classList.remove("hidden");
@@ -63,10 +59,7 @@ const Header = () => {
         open={openRegisterModal}
         handleClose={handleRegisterModalClose}
       />
-      <TermsAndServices
-        open={openTermsAndServices}
-        handleClose={handleTermsAndServicesModalClose}
-      />
+
       <nav className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="w-full py-6 flex items-center justify-between border-b border-indigo-500 lg:border-none">
           <div className="flex items-center">
@@ -115,22 +108,25 @@ const Header = () => {
               Register
             </a>
           </div>
-          <div  className="block ml-10 space-x-4 md:hidden">
-            <a
-              onClick={handleLoginModalOpen}
-              style={{ cursor: "pointer" }}
-              className="inline-block  py-2 px-4 border border-transparent rounded-md text-base font-medium text-white bg-gray-500"
-            >
-              Login
-            </a>
-            <a
-              onClick={handleRegisterModalOpen}
-              style={{ cursor: "pointer" }}
-              className="inline-block text-white py-2 px-4 border 
+
+          <div className="block ml-10 space-x-4 md:hidden">
+            <div>
+              <a
+                onClick={handleLoginModalOpen}
+                style={{ cursor: "pointer" }}
+                className="inline-block  py-2 px-4 border border-transparent rounded-md text-base font-medium text-white bg-gray-500"
+              >
+                Login
+              </a>
+              <a
+                onClick={handleRegisterModalOpen}
+                style={{ cursor: "pointer" }}
+                className="inline-block text-white py-2 px-4 border 
                rounded-md text-base font-medium hover:bg-gray-500"
-            >
-              Register
-            </a>
+              >
+                Register
+              </a>
+            </div>
           </div>
         </div>
       </nav>

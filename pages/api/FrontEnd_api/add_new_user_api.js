@@ -30,8 +30,8 @@ async function handler(req, res) {
               registeredDate: today,
               dowloadedDesigns: [],
               dowloadedIllustrations: [],
-              isTermsAndServiceAccepted: true,
-              userAccountStatus:"Active"
+              isTermsAndServiceAccepted: req.body.termsAndServicesAccepted,
+              userAccountStatus: "Active",
             };
 
             const result = db.collection("meta_data_users").insertOne(payload);

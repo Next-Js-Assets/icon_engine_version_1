@@ -10,6 +10,7 @@ import resizeSVG from "../../SVGManagerAPI/SVGSizeModifierAPI";
 import Link from "next/link";
 import primaryColors from "../../SVGManagerAPI/PrimaryColors";
 import recentDownloadIllustrationByPublic from "../../SVGManagerAPI/recentDownloadIllustartionByPublic";
+import { useRouter } from "next/router";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Illustration", href: "/Illustration" },
@@ -19,166 +20,43 @@ const navigation = [
   { name: "AboutUs", href: "/aboutUs" },
   { name: "Contact", href: "/contact" },
 ];
-const Items = [
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633264985178-d23fa9a59c96?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nageeta",
-      country: "Pakistan",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633289475421-f0f851f6f00e?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633313559082-5db0c86df12d?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Zeeshan",
-      country: "Canada",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627293007095-8b335ebae6e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDN8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nageeta",
-      country: "Pakistan",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113213095-5fda85346b43?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nageeta",
-      country: "Pakistan",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633113089635-115b38c66c49?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwyMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1627490654190-61d45cb41693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDF8TThqVmJMYlRSd3N8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633277190581-d26618118553?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  {
-    name: "Leonard Krasner",
-    role: "Senior Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1633295174543-b63811578a94?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-    downloadedBy: {
-      firstName: "Nadir",
-      country: "United States",
-      websiteLink: "/",
-    },
-  },
-  // More Items...
-];
 
 const Index = () => {
   const [recentDownloadIllustration, setRecentDownloadIllustration] = useState(
     []
   );
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
+  const router = useRouter();
   useEffect(() => {
-    const EST_WIDTH = "300";
-    const EST_HEIGHT = "200";
-    const EST_VIEWBOX = `viewBox="40 -10 400 300"`;
-    const MOBILEORDESKTOP = 1; // 1 for desktop, 0 for mobile
+    if (localStorage.getItem("isLogin") == null) {
+      router.push("/");
+    }
+  }, []);
+  useEffect(() => {
+    if (localStorage.getItem("isLogin") != null) {
+      const EST_WIDTH = "300";
+      const EST_HEIGHT = "200";
+      const EST_VIEWBOX = `viewBox="40 -10 400 300"`;
+      const MOBILEORDESKTOP = 1; // 1 for desktop, 0 for mobile
 
-    let resizedData = recentDownloadIllustrationByPublic.map((svg, index) => {
-      return {
-        id: svg.id,
-        name: svg.name,
-        downloadedBy: svg.downloadedBy,
-        data: resizeSVG(
-          svg.data,
-          EST_WIDTH,
-          EST_HEIGHT,
-          EST_VIEWBOX,
-          MOBILEORDESKTOP
-        ),
-        originalIllustration:illustration.originalIllustration
-      };
-    });
-    setRecentDownloadIllustration([...resizedData]);
-    setCurrentPrimaryColors(primaryColors);
+      let resizedData = recentDownloadIllustrationByPublic.map((svg, index) => {
+        return {
+          id: svg.id,
+          name: svg.name,
+          downloadedBy: svg.downloadedBy,
+          data: resizeSVG(
+            svg.data,
+            EST_WIDTH,
+            EST_HEIGHT,
+            EST_VIEWBOX,
+            MOBILEORDESKTOP
+          ),
+          originalIllustration: illustration.originalIllustration,
+        };
+      });
+      setRecentDownloadIllustration([...resizedData]);
+      setCurrentPrimaryColors(primaryColors);
+    }
   }, []);
 
   return (
@@ -201,7 +79,8 @@ const Index = () => {
                     >
                       <div className="">
                         <h3 className=" mx-1 pt-2 text-lg inline-block">
-                          {illustraion.downloadedBy != undefined && illustraion.downloadedBy.firstName}
+                          {illustraion.downloadedBy != undefined &&
+                            illustraion.downloadedBy.firstName}
                         </h3>
                         <span className="h-5 w-5 inline-block float-right pt-2 mx-2">
                           {/* <Link href={illustraion.downloadedBy.websiteLink}> */}
@@ -210,7 +89,8 @@ const Index = () => {
                         </span>
                       </div>
                       <h4 className="mx-2 float-left pb-2 block text-gray-500 text-md ">
-                        {illustraion.downloadedBy != undefined && illustraion.downloadedBy.country}
+                        {illustraion.downloadedBy != undefined &&
+                          illustraion.downloadedBy.country}
                       </h4>
                       <IllustrationCard
                         illustraion={illustraion}
@@ -226,7 +106,6 @@ const Index = () => {
               </div>
             </div>
           </div>
-         
         </div>
       </div>
     </div>

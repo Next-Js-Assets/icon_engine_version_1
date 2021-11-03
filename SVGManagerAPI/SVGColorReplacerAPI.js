@@ -8,8 +8,8 @@ const SVGColorReplacer = (
   targetColor = {}
 ) => {
   //We have the position of each primary color key.
-  console.log("SVG to  update ");
-  console.log(updatedSVG);
+ // console.log("SVG to  update ");
+  //console.log(updatedSVG);
   primaryColorsPosition.forEach((item, index) => {
     if (item.colorKey === targetColor.colorKey) {
       let replacement = `fill="` + targetColor.currentValue + `"`;
@@ -18,8 +18,8 @@ const SVGColorReplacer = (
       updatedSVG = startString + replacement + endString;
     }
   });
-  console.log("SVG  updated ");
-  console.log(updatedSVG);
+  //console.log("SVG  updated ");
+  //console.log(updatedSVG);
   return updatedSVG;
 };
 

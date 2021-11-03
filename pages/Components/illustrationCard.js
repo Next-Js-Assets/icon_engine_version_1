@@ -12,7 +12,6 @@ const IllustrationCard = ({
   primaryColors = [],
   illustraion = {},
 }) => {
-  
   const [openIllustrationModal, setOpenIllustrationModal] = useState(false);
   const [selectedThumbnail, setSelectedThumbnail] = useState(null);
   const [svgToDisplay, setSvgToDisplay] = useState(null);
@@ -28,20 +27,21 @@ const IllustrationCard = ({
   }, [illustraion]);
   useEffect(() => {
     if (selectedThumbnail != null) {
-      console.log("in thumbnail setting")
+      //console.log("in thumbnail setting")
       setSvgToDisplay(selectedThumbnail.data);
       setOriginal(selectedThumbnail.originalIllustration);
     }
   }, [selectedThumbnail]);
 
   useEffect(() => {
-    if (originalSVG != null)
+    if (originalSVG != null) {
       // It will run once.
-   {   console.log("osvg-------------------");
-      console.log(originalSVG)
+      //console.log("osvg-------------------");
+      //console.log(originalSVG)
       setPrimaryColorsPosition(
         findPrimaryColorPosition(originalSVG, primaryColors)
-      );}
+      );
+    }
     // console.log("**********************************************");
     // console.log(primaryColorsPosition);
   }, [originalSVG]);
@@ -81,7 +81,8 @@ const IllustrationCard = ({
           name: illustraion.name,
           primaryColorsPosition: primaryColorsPosition,
           description: illustraion.description,
-          id:illustraion.id
+          id: illustraion.id,
+          originalIllustration: illustraion.originalIllustration,
         }}
       />
       <SvgOrPngDialog
@@ -89,9 +90,8 @@ const IllustrationCard = ({
         handleClose={handleCloseSvgOrPngDialog}
         selectedIllustration={svgToDisplay}
         selectedIllustrationTitle={illustraion.name}
-        selectedIllustrationDescription={
-          illustraion.description
-        }
+        selectedIllustrationDescription={illustraion.description}
+        selectedOriginalIllustration={illustraion.originalIllustration}
         selectedIllustrationId={illustraion.id}
         fileName={illustraion.name}
       />

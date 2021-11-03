@@ -2,6 +2,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/outline";
+import TermsAndServices from "./termsAndServicesModal";
 // routing
 import Link from "next/link";
 
@@ -15,6 +16,56 @@ export default function Register({ open = false, handleClose }) {
   const [userPassword, setUserPassword] = useState("");
   const [userWebiste, setUserWebsite] = useState("");
   const [userCountry, setUserCountry] = useState("");
+  const [termsAndServicesAccepted, setTermsAndServicesAccepted] =
+    useState(false);
+  const [openTermsAndServices, setOpenTermsAndServices] = useState(false);
+
+  useEffect(() => {
+    if (termsAndServicesAccepted) {
+      let data = {
+        firstName: userFirstName,
+        lastName: userLastName,
+        email: userEmail,
+        password: userPassword,
+        websiteLink: userWebiste,
+        country: userCountry,
+        termsAndServicesAccepted: termsAndServicesAccepted,
+      };
+      fetch("/api/FrontEnd_api/add_new_user_api/", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then(
+          (resp) => {
+            return resp.json();
+          },
+          (error) => {
+            console.log(error);
+          }
+        )
+        .then((data) => {
+          console.log("---------in register modal --------------");
+          console.log(data);
+          if (data.responseCode === 1) {
+            alert("successfully inserted");
+            resetHooks();
+            handleClose();
+
+            // navigate to profile page with detials
+          } else if (data.responseCode === 2) {
+            alert("Try again");
+          } else if (data.responseCode == 3) {
+            // user exist with same email
+            alert(data.responseMessage);
+          } else {
+            alert("Fatal error");
+          }
+        });
+    }
+  }, [termsAndServicesAccepted]);
   useEffect(() => {
     setAllCounries([
       "Algeria",
@@ -118,52 +169,41 @@ export default function Register({ open = false, handleClose }) {
       "Viet Nam",
       "Belize",
     ]);
-   
   }, []);
 
+  const resetHooks = () => {
+    setUserFirstName("");
+    setUserFirstName("");
+    setUserLastName("");
+    setUserEmail("");
+    setUserPassword("");
+    setUserWebsite("");
+    setUserCountry("");
+    setTermsAndServicesAccepted(false);
+    setOpenTermsAndServices(false);
+  };
   //handlers
+  const handleAcceptClick = (e) => {
+    setTermsAndServicesAccepted(e.target.checked);
+  };
+  const handleTermsAndServicesModalClose = () => {
+    setOpenTermsAndServices(false);
+  };
   const handleRegisterClick = (event) => {
     event.preventDefault();
     // validate data here
-    let data = {
-      firstName: userFirstName,
-      lastName: userLastName,
-      email: userEmail,
-      password: userPassword,
-      websiteLink: userWebiste,
-      country: userCountry,
-    };
-    fetch("/api/FrontEnd_api/add_new_user_api/", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(
-        (resp) => {
-          return resp.json();
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
-      .then((data) => {
-        console.log("---------in register modal --------------");
-        console.log(data);
-        if (data.responseCode === 1) {
-          alert("successfully inserted");
-          handleClose();
-          // navigate to profile page with detials
-        } else if (data.responseCode === 2) {
-          alert("Try again");
-        } else if (data.responseCode == 3) {
-          // user exist with same email
-          alert(data.responseMessage);
-        } else {
-          alert("Fatal error");
-        }
-      });
+    if (
+      userFirstName != "" &&
+      userLastName != "" &&
+      userEmail != "" &&
+      userPassword != "" &&
+      userWebiste != "" &&
+      userCountry != ""
+    ) {
+      setOpenTermsAndServices(true);
+    } else {
+      alert("Please fill required fileds");
+    }
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -298,6 +338,11 @@ export default function Register({ open = false, handleClose }) {
                         >
                           Password
                         </label>
+                        <TermsAndServices
+                          open={openTermsAndServices}
+                          handleClose={handleTermsAndServicesModalClose}
+                          handleAcceptClick={handleAcceptClick}
+                        />
                         <div className="mt-1">
                           <input
                             id="password"

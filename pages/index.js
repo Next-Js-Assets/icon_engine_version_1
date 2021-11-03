@@ -36,7 +36,7 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log(data.responsePayload);
+         // console.log(data.responsePayload);
           setfetchedNewestIllustrationFromAPI(data.responsePayload);
         } else {
           console.log(data.responseMessage);
@@ -86,7 +86,7 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log(data.responsePayload);
+        //  console.log(data.responsePayload);
           setfetchedPopularIllustrationFromAPI(
             data.responsePayload.map((item) => item.allFields)
           );
@@ -114,7 +114,7 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log(data.responsePayload);
+         // console.log(data.responsePayload);
           setfetchedPopularDesignsFromAPI(
             data.responsePayload.map((item) => item.allFields)
           );
@@ -142,8 +142,8 @@ function Index(props) {
       )
       .then((data) => {
         if (data.responseCode == 1) {
-          console.log("---------");
-          console.log(data.responsePayload);
+          // console.log("---------");
+          // console.log(data.responsePayload);
           setFetchedCategoriesFromAPI(data.responsePayload);
         } else {
           console.log(data.responseMessage);
@@ -193,7 +193,7 @@ function Index(props) {
 
     let resizedDataForNewestIllustration = fetchedNewestIllustrationFromAPI.map(
       (illustration, index) => {
-        console.log(illustration.originalIllustration)
+      //  console.log(illustration.originalIllustration)
         return {
           id: illustration._id,
           name: illustration.IllustrationTitle,

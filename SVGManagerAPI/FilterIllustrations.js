@@ -66,7 +66,7 @@ const filterIllustrations = async (keyword) => {
   );
 };
 
-const getFilteredIllustrationFromKeyword = (
+export const getFilteredIllustrationFromKeyword = (
   resolve,
   allMatchedIllustration,
   keyword

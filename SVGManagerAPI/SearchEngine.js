@@ -34,6 +34,7 @@ const SearchEngine = async (type = "all") => {
       (resolve) => {
         // console.log("resolve");
         // console.log(resolve);
+        console.log("in designs")
         matchedResults.designs = resolve;
         return matchedResults;
       },

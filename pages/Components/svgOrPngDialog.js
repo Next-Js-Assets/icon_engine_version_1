@@ -12,17 +12,18 @@ export default function SvgOrPngDialog({
   selectedIllustrationDescription,
   selectedIllustrationId,
   fileName,
-  userEmail = "nigeetawadhwani@gmail.com",
-  userCountry = "pakistan",
-  userWebsiteLink = "http://facebook.com",
-  userName = "Nigeeta",
+  selectedOriginalIllustration,
 }) {
   const cancelButtonRef = useRef(null);
   const [PNGFormat, setPNGFormat] = useState(null);
-  // useEffect(() => {
-  // //  console.log("from svg and png");
-  //   //console.log(selectedIllustration);
-  // }, [selectedIllustration]);
+  const [userDetails, setUserDetails] = useState({});
+  useEffect(() => {
+    if (localStorage.getItem("userDetails") != undefined) {
+      setUserDetails(JSON.parse(localStorage.getItem("userDetails")));
+      console.log("userdetails when user try to download an image");
+      console.log(JSON.parse(localStorage.getItem("userDetails")));
+    }
+  }, [selectedIllustration]);
 
   const handleDownloadPGN = () => {
     let data = {
@@ -64,14 +65,15 @@ export default function SvgOrPngDialog({
   };
   const addRecordInHistroy = () => {
     let data = {
-      email: userEmail,
-      name: userName,
-      country: userCountry,
-      websiteLink: userWebsiteLink,
+      email: userDetails.email,
+      name: userDetails.firstName,
+      country: userDetails.country,
+      websiteLink: userDetails.websiteLink,
       illustrationId: selectedIllustrationId,
       illstrationTitle: selectedIllustrationTitle,
       illustrationThumbnail: selectedIllustration,
       illustrationDescription: selectedIllustrationDescription,
+      OriginalIllustration: selectedOriginalIllustration,
     };
     fetch("/api/FrontEnd_api/add_downloaded_Illustration_record_api", {
       method: "POST",

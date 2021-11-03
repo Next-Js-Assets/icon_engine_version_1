@@ -22,56 +22,58 @@ export default function Login({ open = false, handleClose }) {
   };
   const handleLoginClick = (event) => {
     event.preventDefault();
-    // validate fields here
-    console.log("from login modal");
-    console.log(email);
-    console.log(password);
-    let data = {
-      email: email,
-      password: password,
-    };
+    if (email != "" && password != "") {
+      // validate fields here
 
-    fetch("/api/FrontEnd_api/authenticate_user_api", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(
-        (resp) => {
-          return resp.json();
+      let data = {
+        email: email,
+        password: password,
+      };
+
+      fetch("/api/FrontEnd_api/authenticate_user_api", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
         },
-        (error) => {
-          console.log(error);
-        }
-      )
-      .then((data) => {
-        if (data.responseCode == 1) {
-          // when password is incorrect
-          if (data.responsePayload == null) {
+      })
+        .then(
+          (resp) => {
+            return resp.json();
+          },
+          (error) => {
+            console.log(error);
+          }
+        )
+        .then((data) => {
+          if (data.responseCode == 1) {
+            // when password is incorrect
+            if (data.responsePayload == null) {
+              alert(data.responseMessage);
+            } else {
+              alert(data.responseMessage);
+              console.log(data.responsePayload);
+              localStorage.setItem(
+                "userDetails",
+                JSON.stringify(data.responsePayload)
+              );
+              localStorage.setItem("isLogin", true);
+              router.push({ pathname: "/profile" });
+            }
+          } else if (data.responseCode == 2) {
+            // user not found
             alert(data.responseMessage);
           } else {
+            // duplicate users with same email id
             alert(data.responseMessage);
-            console.log(data.responsePayload);
-            localStorage.setItem(
-              "userDetails",
-              JSON.stringify(data.responsePayload)
-            );
-            localStorage.setItem("isLogin", true);
-            router.push({ pathname: "/profile" });
           }
-        } else if (data.responseCode == 2) {
-          // user not found
-          alert(data.responseMessage);
-        } else {
-          // duplicate users with same email id
-          alert(data.responseMessage);
-        }
-      })
-      .catch((error) => {
-        console.log(error());
-      });
+        })
+        .catch((error) => {
+          console.log(error());
+        });
+    } else {
+      alert("Please insert details for login");
+    }
   };
   const handleForgetPasswordClick = (event) => {
     event.preventDefault();

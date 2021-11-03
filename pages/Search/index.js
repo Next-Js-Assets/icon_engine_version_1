@@ -1,6 +1,5 @@
 import "tailwindcss/tailwind.css";
 import { useEffect, useState } from "react";
-import SearchBar from "../Components/searchBar";
 import CustomDropDown from "../Components/CustomDropDown";
 import Title from "../Components/title";
 import IllustrationCard from "../Components/illustrationCard";
@@ -10,75 +9,97 @@ import BackgroundSwitch from "../Components/backgroundSwitch";
 import primaryColors from "../../SVGManagerAPI/PrimaryColors";
 import { withRouter } from "next/router";
 import SearchEngine from "../../SVGManagerAPI/SearchEngine";
-import GetRefinedKeyword from "../../SVGManagerAPI/GetRefinedKeyword";
-import { SerachFilteredResults } from "../../SVGManagerAPI/SerachFilteredResults";
+import { SerachResultsAgainstFilters } from "../../SVGManagerAPI/SerachResultsAgainstFilters";
 import resizeSVG from "../../SVGManagerAPI/SVGSizeModifierAPI";
 
 function Index({ router }) {
   const [currentIllustrations, setCurrentIllustrations] = useState([]);
   const [currentPrimaryColors, setCurrentPrimaryColors] = useState([]);
-  const [fetchedIllustrations, setFetchedIllustration] = useState([]);
-  const [fetchedDesigns, setFetchedDesigns] = useState([]);
   //---------------------------filters states-----------
-  const [refinedKeywords, setRefinedKewords] = useState([]);
-  const [fetchedResultsFromAPI, setFetchedResultsFromAPI] = useState([]);
+  const [fetchedResultsFromAPI, setFetchedResultsFromAPI] = useState({});
+  const [fetchedResultsFromAPICopy, setFetchedResultsFromAPICopy] = useState(
+    {}
+  );
   const [selectedTags, setSelectedTags] = useState([]);
   const [categoryName, setCatgoryName] = useState("all");
   const [sortType, setSortType] = useState("newest");
   const [type, setType] = useState("all");
   const [language, setLanguage] = useState("English");
-  const [searchInput, setSerachInput] = useState("");
   const [categoriesList, setCategoriesList] = useState([]);
   const [categoryNames, setCategoryNames] = useState([]);
   const [tagsList, setTagsList] = useState([]);
   const [tagsTitleList, setTagsTitleList] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   //---------------------------------used to fetch results once
   useEffect(() => {
-    if (router.query.searchValue != undefined) {
-      const searchValue = router.query.searchValue.toLowerCase();
-      if (searchValue != "") setRefinedKewords(GetRefinedKeyword(searchValue));
+    if (
+      router.query.searchValue != undefined &&
+      router.query.searchValue.toLowerCase() != ""
+    ) {
+      setSearchValue(router.query.searchValue.toLowerCase());
+      console.log("serach value is " + router.query.searchValue.toLowerCase());
     }
+    // chcek fotr type
     if (router.query.type != undefined) setType(router.query.type);
 
+    // check for category
     if (router.query.category != undefined)
       setCatgoryName(router.query.category);
   }, []);
   useEffect(() => {
-    if (router.query.type != undefined) {
-      SearchEngine(router.query.type.toLowerCase()).then(
-        (data) => {
-          console.log("----------search results from serach page---------");
-          console.log(data);
-          setFetchedResultsFromAPI(data);
-        },
-        (error) => {
-          //console.log(error.message);
-        }
-      );
-    }
+    console.log("type is changed" + type);
+    SearchEngine(type.toLowerCase()).then(
+      (data) => {
+        console.log("results are feteched--");
+        setFetchedResultsFromAPI(data);
+        setFetchedResultsFromAPICopy(data);
+      },
+      (error) => {
+        console.log(error.message);
+      }
+    );
   }, [type]);
 
   useEffect(() => {
-    console.log("------when fiters changes---------");
-    // console.log(
-    //   SerachFilteredResults(
-    //     refinedKeywords,
-    //     fetchedResultsFromAPI,
-    //     categoryName,
-    //     selectedTags
-    //   )
-    // );
-  }, [sortType, language, type, categoryName, selectedTags]);
+    //console.log("filter changes with " + fetchedResultsFromAPI);
+
+    if (fetchedResultsFromAPI != {}) {
+      console.log("------affter filter applied---------");
+
+      SerachResultsAgainstFilters(
+        searchValue,
+        fetchedResultsFromAPICopy,
+        categoryName,
+        selectedTags,
+        language,
+        sortType
+      ).then((resolve) => {
+        //console.log("resolve from serach page");
+        //console.log(resolve);
+        if (resolve !== undefined) {
+          //  console.log("after resolving setting fetched results");
+          setFetchedResultsFromAPI(resolve);
+        }
+      });
+    }
+  }, [
+    sortType,
+    language,
+    type,
+    categoryName,
+    selectedTags,
+    fetchedResultsFromAPICopy,
+  ]);
 
   useEffect(() => {
     const EST_WIDTH = "200";
     const EST_HEIGHT = "200";
     const EST_VIEWBOX = `viewBox="45 -40 400 400"`;
     const MOBILEORDESKTOP = 1; // 1 for desktop, 0 for mobile
-    console.log("outside=================");
-
+    //console.log("going to resize illustrations ");
+    //console.log(fetchedResultsFromAPI);
     if (fetchedResultsFromAPI.illustrations != undefined) {
-      console.log("inside here====================================");
+      console.log("illustrations are resized");
       let resizedData = fetchedResultsFromAPI.illustrations.map(
         (illustration, index) => {
           return {
@@ -101,63 +122,14 @@ function Index({ router }) {
           };
         }
       );
+      ///console.log("++++++++++++++++++++++++++++++++++++");
       setCurrentIllustrations([...resizedData]);
       setCurrentPrimaryColors([...primaryColors]);
     }
   }, [fetchedResultsFromAPI]);
 
-  // useEffect(() => {
-  //   fetch("/api/FrontEnd_api/load_newest_designs_api", {
-  //     method: "POST",
-  //     body: JSON.stringify({}),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then(
-  //       (resp) => {
-  //         return resp.json();
-  //       },
-  //       (error) => {
-  //         //console.log(error);
-  //       }
-  //     )
-  //     .then((data) => {
-  //       if (data.responseCode == 1) {
-  //         //console.log(data.responsePayload);
-  //         setFetchedDesigns(data.responsePayload);
-  //       } else {
-  //         //console.log(data.responseMessage);
-  //       }
-  //     });
-  // }, []);
-  // useEffect(() => {
-  //   fetch("/api/FrontEnd_api/load_newest_illustrations_api", {
-  //     method: "POST",
-  //     body: JSON.stringify({}),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then(
-  //       (resp) => {
-  //         return resp.json();
-  //       },
-  //       (error) => {
-  //         //console.log(error);
-  //       }
-  //     )
-  //     .then((data) => {
-  //       if (data.responseCode == 1) {
-  //         //console.log(data.responsePayload);
-  //         setFetchedIllustration(data.responsePayload);
-  //       } else {
-  //         //console.log(data.responseMessage);
-  //       }
-  //     });
-  // }, []);
-
   useEffect(() => {
+    console.log("categories and tags are fetched");
     fetch("/api/FrontEnd_api/load_all_categories_api", {
       method: "POST",
       body: JSON.stringify({}),
@@ -170,7 +142,7 @@ function Index({ router }) {
           return resp.json();
         },
         (error) => {
-          //console.log(error);
+          console.log(error);
         }
       )
       .then((data) => {
@@ -195,7 +167,7 @@ function Index({ router }) {
           return resp.json();
         },
         (error) => {
-          //console.log(error);
+          console.log(error);
         }
       )
       .then((data) => {
@@ -204,12 +176,12 @@ function Index({ router }) {
           //console.log(data.responsePayload);
           setTagsList(data.responsePayload);
         } else {
-          //console.log(data.responseMessage);
+          console.log(data.responseMessage);
         }
       });
   }, []);
   useEffect(() => {
-    //console.log("in category names " + categoriesList.length);
+    console.log("categories and tag name are seperated");
     if (categoriesList.length > 0) {
       setCategoryNames(categoriesList.map((category) => category.title));
     }
@@ -222,18 +194,30 @@ function Index({ router }) {
 
   const handletagSelection = (tagValue, tagId) => {
     setSelectedTags((prevTags) => [...prevTags, tagValue]);
-    //console.log("-----------------selected tags-------------");
-    //console.log(selectedTags);
-    // document.getElementById(tagId).classList.remove("bg-white");
   };
 
   const handleSearchInputChange = (event) => {
-    setSerachInput(event.target.value);
-    setRefinedKewords(GetRefinedKeyword(event.target.value));
+    setSearchValue(event.target.value);
   };
   const handleSerachButtonClick = (event) => {
     event.preventDefault();
-    alert("serach");
+    if (fetchedResultsFromAPI != {}) {
+      SerachResultsAgainstFilters(
+        searchValue,
+        fetchedResultsFromAPICopy,
+        categoryName,
+        selectedTags,
+        language,
+        sortType
+      ).then((resolve) => {
+        //console.log("resolve from serach page");
+        //console.log(resolve);
+        if (resolve !== undefined) {
+          //  console.log("after resolving setting fetched results");
+          setFetchedResultsFromAPI(resolve);
+        }
+      });
+    }
   };
   const handleLanguageChange = (value) => {
     setLanguage(value);
@@ -259,7 +243,7 @@ function Index({ router }) {
             text-gray-700  focus:z-10 focus:outline-none 
             focus:ring-1 `}
           placeholder="Search..."
-          value={searchInput}
+          value={searchValue}
           onChange={handleSearchInputChange}
         />
         <button
@@ -277,7 +261,7 @@ function Index({ router }) {
 
       <div className="grid sm:grid-cols-6 ">
         <div className="sm:col-span-1 bg-gray-100">
-          <div className="mb-1 sm:py-4 py-1 rounded cursor-pointer bg-gray-100">
+          <div className="mb-1 sm:py-4 py-1 rounded  bg-gray-100">
             {/*type */}
             <h1 className="text-lg ml-8 ">Type</h1>
             <div className="mx-2 ml-8">
@@ -288,7 +272,7 @@ function Index({ router }) {
               />
             </div>
           </div>
-          <div className=" mb-1 sm:py-4 py-1  rounded cursor-pointer bg-gray-100">
+          <div className=" mb-1 sm:py-4 py-1  rounded  bg-gray-100">
             {/** categories */}
             <h1 className="text-lg  ml-8">Category</h1>
             <div className="ml-8 mt-1">
@@ -301,7 +285,7 @@ function Index({ router }) {
             </div>
           </div>
 
-          <div className="mb-1 sm:py-4 py-1  rounded cursor-pointer bg-gray-100">
+          <div className="mb-1 sm:py-4 py-1  rounded bg-gray-100">
             {/* sort */}
             <h1 className="text-lg ml-8">Sort</h1>
             <div className="ml-8 mt-1">
@@ -312,7 +296,7 @@ function Index({ router }) {
               />
             </div>
           </div>
-          <div className="mb-1 sm:py-4 py-1  rounded cursor-pointer bg-gray-100">
+          <div className="mb-1 sm:py-4 py-1  rounded bg-gray-100">
             {/* sort */}
             <h1 className="text-lg  ml-8">Language</h1>
             <div className="ml-8 mt-1">
@@ -323,14 +307,8 @@ function Index({ router }) {
               />
             </div>
           </div>
-          {/* <div className="mb-1 sm:py-4 py-1 rounded cursor-pointer bg-gray-100">
-            
-            <h1 className="text-lg  ml-8">Background</h1>
-            <div className="ml-8 mt-1">
-              <BackgroundSwitch />
-            </div>
-          </div> */}
-          <div className="mb-1 sm:py-4 py-1 rounded cursor-pointer bg-gray-100">
+
+          <div className="mb-1 sm:py-4 py-1 rounded bg-gray-100">
             <h1 className="text-lg  ml-8">Tags</h1>
             <div className="sm:mx-10 mb-10 ml-8 justify-items-center">
               {tagsTitleList.map((tag, index) => (
@@ -347,65 +325,56 @@ function Index({ router }) {
         </div>
         <div className="sm:col-span-5">
           {/*Designs*/}
-          {router.query.type != undefined &&
-            (router.query.type.toLowerCase() == "design" ||
-              router.query.type.toLowerCase() == "all") && (
-              <div className="space-y-12 ">
-                <div className="sm:px-20 px-4  space-y-12 py-10 ">
-                  <Title title={`Designs`} />
-                  <ul
-                    role="list"
-                    className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
-                  >
-                    {fetchedResultsFromAPI.designs != undefined &&
-                      fetchedResultsFromAPI.designs
-                        .slice(0, 12)
-                        .map((design, index) => (
-                          <li
-                            key={`design_${index}`}
-                            className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
-                          >
-                            <DesignCard design={design} />
-                          </li>
-                        ))}
-                  </ul>
-                  <div className="bg-gray-100 py-2 text-center">
-                    <span className="cursor-pointer">Load More</span>
-                  </div>
-                </div>
+          {(type.toLowerCase() == "design" || type.toLowerCase() == "all") && (
+            <div className="space-y-12 ">
+              <div className="sm:px-20 px-4  space-y-12 py-10 ">
+                <Title title={`Designs`} />
+                <ul
+                  role="list"
+                  className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-6  sm:space-y-0 lg:grid-cols-2 lg:gap-8"
+                >
+                  {fetchedResultsFromAPI.designs != undefined &&
+                    fetchedResultsFromAPI.designs
+                      .slice(0, 12)
+                      .map((design, index) => (
+                        <li
+                          key={`design_${index}`}
+                          className="pb-8  border cursor-pointer  text-center rounded-lg xl:text-left"
+                        >
+                          <DesignCard design={design} />
+                        </li>
+                      ))}
+                </ul>
               </div>
-            )}
+            </div>
+          )}
 
           {/*Illustrations*/}
-          {router.query.type != undefined &&
-            (router.query.type.toLowerCase() == "all" ||
-              router.query.type.toLowerCase() == "illustration") && (
-              <div className="space-y-12 mt-10">
-                <div className="sm:px-20 px-4 space-y-12 py-10">
-                  <Title title={`Illustration`} />
+          {(type.toLowerCase() == "all" ||
+            type.toLowerCase() == "illustration") && (
+            <div className="space-y-12 mt-10">
+              <div className="sm:px-20 px-4 space-y-12 py-10">
+                <Title title={`Illustration`} />
 
-                  <ul
-                    role="list"
-                    className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
-                  >
-                    {currentIllustrations.map((illustraion, index) => (
-                      <li
-                        key={`illustraion_${index}`}
-                        className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
-                      >
-                        <IllustrationCard
-                          illustraion={illustraion}
-                          primaryColors={currentPrimaryColors}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="bg-gray-100 py-2 text-center">
-                    <span className="cursor-pointer">Load More</span>
-                  </div>
-                </div>
+                <ul
+                  role="list"
+                  className="space-y-4 grid grid-cols-2 gap-2  sm:space-y-0 lg:grid-cols-5 lg:gap-8"
+                >
+                  {currentIllustrations.map((illustraion, index) => (
+                    <li
+                      key={`illustraion_${index}`}
+                      className="pb-6  border cursor-pointer  text-center rounded-lg  text-center"
+                    >
+                      <IllustrationCard
+                        illustraion={illustraion}
+                        primaryColors={currentPrimaryColors}
+                      />
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
+            </div>
+          )}
         </div>
       </div>
     </div>

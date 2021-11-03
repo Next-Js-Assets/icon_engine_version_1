@@ -19,11 +19,22 @@ async function handler(req, res) {
         },
         (error, response) => {
           if (error) throw error;
-          res.status(201).json({
-            responseCode: 1,
-            responseMessage: "User Details Updated",
-            responsePayload: response,
-          });
+          const get_data = db
+            .collection("meta_data_users")
+            .find({ email: req.body.email })
+            .toArray(function (err, result) {
+              if (err) throw err;
+              let records = [];
+              result.forEach((item, index) => {
+                records.push(item);
+              });
+
+              res.status(201).json({
+                responseCode: 1,
+                responseMessage: "Updated Successfully",
+                responsePayload: records[0],
+              });
+            });
         }
       );
     } catch (err) {

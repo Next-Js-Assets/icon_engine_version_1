@@ -30,6 +30,7 @@ async function handler(req, res) {
                 illstrationTitle: req.body.illstrationTitle,
                 illustrationThumbnail: req.body.illustrationThumbnail,
                 illustrationDescription: req.body.illustrationDescription,
+                originalIllustration: req.body.OriginalIllustration,
               };
               previousHistroy.push(payload);
               // add record in users collection
