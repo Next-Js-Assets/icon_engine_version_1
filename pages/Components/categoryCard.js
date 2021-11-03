@@ -5,7 +5,7 @@ const CategoryCard = ({ category = {} }) => {
   const router = useRouter();
   const handleCategoryClick = (category) => {
     router.push({
-      pathname: "/search",
+      pathname: "/Search",
       query: { type: "all", category: category.title },
     });
   };

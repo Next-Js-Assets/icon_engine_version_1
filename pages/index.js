@@ -253,7 +253,7 @@ function Index(props) {
 
   const handleGetSerachText = (searchValue, type) => {
     router.push({
-      pathname: "/search",
+      pathname: "/Search",
       query: { type, searchValue },
     });
   };
